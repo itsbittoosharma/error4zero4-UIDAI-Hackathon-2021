@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html>
+<head>
+      <title> USER INTERFACE </title>
+</head>
+
+<style>
+    .box{
+    box-shadow: 0 0 15px rgba(0,0,0,0.5);
+    padding: 10px;
+    text-align:center;
+    font-size:30px;
+    font-family: verdana;
+    }
+    </style>
+<body>
+  
+<div class="box">
+          AADHAAR ADDRESS UPDATE <span id="otp"> </span>
+ </div><br>
+     <form>
+        <fieldset>
+            <legend style="background-color: darkorange" > <h2>USER DETAILS </h2></legend>
+         <ul>
+          1. AADHAAR NUMBER:
+          <input type="number" name="number" id="aadharNo" placeholder="enter valid number"> <br><br><br>
+          2. USER NAME:
+          <input type="text" name="initial" placeholder="enter user name"> <br><br><br>
+          3. CLICK TO GENERATE AND VERIFY CAPTCHA:
+          <button type="button" 
+                onclick="captcha()">&#xf021;</button>
+                 <div id="captchaHere">
+                </div>
+                <input type="text" id="captchaCode" required
+                placeholder="Enter The Special Code You See Above">
+           </ul> 
+         </fieldset>   <br> <br>
+         
+         <fieldset>
+             <legend style="background-color: ghostwhite"> <h2> VERIFIER DETAILS </h2> </legend>
+             <ul>
+                 1.AADHAAR NUMBER:
+                 <input type="number" name="number" id="aadharNo1" placeholder="enter valid number"> <br><br><br>
+                 2. VERIFIER NAME:
+                 <input type="text" name="initial1 " placeholder="enter verifier name"> <br><br><br>
+                 3. CLICK TO GENERATE AND VERIFY CAPTCHA:
+                 <button type="button" 
+                onclick="captcha1()">&#xf021;</button>
+                 <div id="captchaHere1">
+                </div>
+                <input type="text" id="captchaCode1" required
+                placeholder="Enter The Special Code You See Above">
+
+             </ul> 
+         </fieldset> <br> <br> 
+           
+        <fieldset>
+            <legend style="background-color: green"> <h2> AUTHENTIFICATION </h2> </legend>
+            <ul>
+          <!--      1. CLICK THE IMAGE TO GENERATE AND VERIFY CAPTCHA:
+          <div class="contain">
+		<input type="text" id="capt" readonly="readonly" >
+		<div id="refresh"> <img src="refresh.png" width="50px" onclick="cap()"></div>
+
+		<input type="text" id="textinput" placeholder="enter..">
+		<button onclick="validcap()">Check</button>
+          </div>
+           
+           
+           <script type="text/javascript">
+		function cap() {
+
+			var alpha=['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V'
+			           ,'W','X','Y','Z','1','2','3','4','5','6','7','8','9','0','a','b','c','d','e','f','g','h','i',
+			           'j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z'];
+
+			var a=alpha[Math.floor(Math.random()*62)];
+			var b=alpha[Math.floor(Math.random()*62)];
+			var c=alpha[Math.floor(Math.random()*62)];
+			var d=alpha[Math.floor(Math.random()*62)];
+			var e=alpha[Math.floor(Math.random()*62)];
+			var f=alpha[Math.floor(Math.random()*62)];
+
+			var sum=a + b + c + d + e + f;
+
+			document.getElementById("capt").value=sum;
+		}
+
+		function validcap() {
+			var string1 = document.getElementById('capt').value;
+			var string2 = document.getElementById('textinput').value;
+			if (string1 == string2){
+				alert("Form is validated Succesfully");
+				return true;
+			}
+			else {
+				alert("Please enter a valid captcha");
+				return false;
+			}
+		}
+
+
+	</script><br> <br> -->
+           1. GENERATE USER OTP :<br>
+           
+      <br><button type="button"  onclick=" Otp() "> Generate OTP </button><br> <br>
+      <input type="number" " id="aadharOtp" aria-describedby="aadharOtp" required placeholder="Enter OTP Here">
+          <br><br>2. GENERATE VERIFIER OTP: <br>
+           <br><button type="button" onclick=" Otp1() "> Generate OTP </button><br> <br>
+           <input type="number" " id="aadharOtp1" aria-describedby="aadharOtp" required placeholder="Enter OTP Here">
+           <a href="interf-2.html">
+               <input type ="button"/ value="VERIFY">
+           </a>
+            
+
+            </ul>
+        </fieldset>   
+          
+    </form>
+      </body>
+      <script>
+        var txnid;
+        var txn;
+        async function captcha() {
+    
+    
+          var captcha;
+    
+          let url = "https://stage1.uidai.gov.in/unifiedAppAuthService/api/v2/get/captcha";
+          var response = await fetch(url, {
+            method: 'POST', headers: {
+              "Content-Type": 'application/json',
+    
+    
+            },
+    
+            body: JSON.stringify({
+              "langCode": "en",
+              "captchaLength": "3",
+              "captchaType": "2"
+            }),
+    
+    
+          }).then(function (response) { return response.json(); }).then(function (json) {
+            captcha = json.captchaBase64String;
+            txnid = json.captchaTxnId;
+    
+          });
+    
+    
+    
+          var image = new Image();
+    
+          image.src = 'data:image/png;base64,' + captcha;
+     
+          var div = document.getElementById("captchaHere");
+          div.appendChild(image);
+          //block.setAttribute("style", "text-align:center");
+        };
+    
+        function uuidv4() {
+          return ([1e7] + -1e3 + -4e3 + -8e3 + -1e11).replace(/[018]/g, c =>
+            (c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16)
+          );
+    
+        };
+    
+    
+        async function Otp() {
+          var url = "https://stage1.uidai.gov.in/onlineekyc/getOtp/"
+    
+          var uid4 = uuidv4();
+          var response = await fetch(url, {
+            method: 'POST', headers: {
+              "Content-Type": 'application/json',
+              
+    
+    
+            },
+    
+            body: JSON.stringify({
+              "uid": document.getElementById("aadharNo").value,
+              "txnId": txnid,
+            
+            })
+    
+          }).then(function (response) { return response.json(); }).then(function (json) {
+            console.log(json);
+            txn = json.txnId;
+            
+          });
+        };
+    
+        async function ekyc() {
+    
+          var url = "https://stage1.uidai.gov.in/onlineekyc/getEkyc/";
+          var response = await fetch(url, {
+            method: 'POST', headers: {
+              "Content-Type": 'application/json',
+    
+    
+    
+            },
+    
+            body: JSON.stringify({
+    
+              "uid": document.getElementById("aadharNo").value,
+              "txnId": txn,
+              "otp": document.getElementById("aadharOtp").value,
+    
+            })
+    
+          }).then(function (response) { return response.json(); }).then(function (json) {
+            console.log(json.status);
+            parser = new DOMParser();
+            xmlDoc = parser.parseFromString(json.eKycString, "text/xml");
+    
+    
+    
+    
+            //var s=new XMLSerializer().serializeToString(json.eKycString.node());
+    
+            var s = json.eKycString.search("country");
+            var s2 = json.eKycString.search("<LData");
+            var sliced = json.eKycString.substring(s, s2 - 2);
+            console.log(sliced);
+    
+    
+          });
+    
+        }
+        var txnid1;
+        var txn1;
+        async function captcha1() {
+    
+    
+          var captcha1;
+    
+          let url = "https://stage1.uidai.gov.in/unifiedAppAuthService/api/v2/get/captcha";
+          var response = await fetch(url, {
+            method: 'POST', headers: {
+              "Content-Type": 'application/json',
+    
+    
+            },
+    
+            body: JSON.stringify({
+              "langCode": "en",
+              "captchaLength": "3",
+              "captchaType": "2"
+            }),
+    
+    
+          }).then(function (response) { return response.json(); }).then(function (json) {
+            captcha1 = json.captchaBase64String;
+            txnid1 = json.captchaTxnId;
+    
+          });
+    
+    
+    
+          var image1 = new Image();
+    
+          image1.src = 'data:image/png;base64,' + captcha1;
+     
+          var div = document.getElementById("captchaHere1");
+          div.appendChild(image1);
+          //block.setAttribute("style", "text-align:center");
+        };
+    
+        function uuidv4() {
+          return ([1e7] + -1e3 + -4e3 + -8e3 + -1e11).replace(/[018]/g, c =>
+            (c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16)
+          );
+    
+        };
+    
+    
+        async function Otp1() {
+          var url = "https://stage1.uidai.gov.in/onlineekyc/getOtp/"
+    
+          var uid4 = uuidv4();
+          var response = await fetch(url, {
+            method: 'POST', headers: {
+              "Content-Type": 'application/json',
+              
+    
+    
+            },
+    
+            body: JSON.stringify({
+              "uid": document.getElementById("aadharNo1").value,
+              "txnId": txnid1,
+            
+            })
+    
+          }).then(function (response) { return response.json(); }).then(function (json) {
+            console.log(json);
+            txn1 = json.txnId;
+            
+          });
+        };
+    
+        async function ekyc() {
+    
+          var url = "https://stage1.uidai.gov.in/onlineekyc/getEkyc/";
+          var response1 = await fetch(url, {
+            method: 'POST', headers: {
+              "Content-Type": 'application/json',
+    
+    
+    
+            },
+    
+            body: JSON.stringify({
+    
+              "uid": document.getElementById("aadharNo1").value,
+              "txnId": txn1,
+              "otp": document.getElementById("aadharOtp1").value,
+    
+            })
+    
+          }).then(function (response) { return response.json(); }).then(function (json) {
+            console.log(json.status);
+            parser = new DOMParser();
+            xmlDoc = parser.parseFromString(json.eKycString, "text/xml");
+    
+    
+    
+    
+            //var s=new XMLSerializer().serializeToString(json.eKycString.node());
+    
+            var s = json.eKycString.search("country");
+            var s2 = json.eKycString.search("<LData");
+            var sliced = json.eKycString.substring(s, s2 - 2);
+            console.log(sliced);
+    
+    
+          });
+    
+        }
+      </script>
+</html>

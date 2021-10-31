@@ -1,0 +1,99 @@
+<!DOCTYOE html>
+<head>
+<title> third interface </title>
+</head>
+<style>
+    .box{
+    box-shadow: 0 0 15px rgba(0,0,0,0.5);
+    padding: 15px;
+    text-align:center;
+    font-size:30px;
+        font-family: verdana;
+    }
+    </style>
+<body>
+
+<div class="box">
+          ADDRESS REVIEW <span id="otp"> </span>
+ </div>
+
+         <ul>
+            
+             <h2 style="font-family: verdana" style="background-color: darkorange">1. USER ADDRESS:</h2>
+            
+          <input type="text" name="ADDRESS" value="SECTOR-5 ROHINI, DELHI">
+        
+          <h2 style="font-family: verdana">2. ENABLE DEVICE LOCATION: </h2>
+          
+          
+          
+       </ul>
+    <br> 
+    <p style="margin-left: 150; margin-top: 5;" id="one"></p>
+    <button style="margin-top: 4; margin-left: 40;" id = "find-me">Verify my location</button><br/>
+<p style="margin-left: 20;" id = "status"></p>
+<a style="margin-left: 20;" id = "map-link" target="_blank"></a>
+<p style="margin-left: 20;" id = "tmp"></p>
+<input type="button" style="margin-top: 10" value='VERIFY' style="margin-left: 40, margin-top:30">
+</body>
+<script>
+    function geoFindMe() {
+ 
+ const status = document.querySelector('#status');
+ const mapLink = document.querySelector('#map-link');
+ const tmp = document.querySelector('#tmp');
+ 
+ mapLink.href = '';
+ mapLink.textContent = '';
+ 
+ function success(position) {
+   const latitude  = position.coords.latitude;
+   const longitude = position.coords.longitude;
+ 
+   status.textContent = '';
+   const R = 6371e3; // metres
+   const lat2=27.2132481;
+   const lon2=77.9272834;
+ const φ1 = latitude * Math.PI/180; // φ, λ in radians
+ const φ2 = lat2 * Math.PI/180;
+ const Δφ = (lat2-latitude) * Math.PI/180;
+ const Δλ = (lon2-longitude) * Math.PI/180;
+ 
+ const a = Math.sin(Δφ/2) * Math.sin(Δφ/2) +
+           Math.cos(φ1) * Math.cos(φ2) *
+           Math.sin(Δλ/2) * Math.sin(Δλ/2);
+ const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+ 
+ const d = R * c;
+  // in metres
+ 
+ console.log ("You are exactly "+Math.round(d) +" meters (straight line dist) away from Sikandra (Agra)");
+ 
+ if(d>20){
+   tmp.textContent = 'Your location dont match with expected location';
+ }
+ else{
+   tmp.textContent = 'Location Matched';
+ }
+ 
+   mapLink.href = `https://www.google.com/maps/search/?api=1&query=${latitude}%2C${longitude}`;
+   mapLink.textContent = `Latitude: ${latitude} °, Longitude: ${longitude} °`;
+ 
+   
+ }
+ 
+ function error() {
+   status.textContent = 'Unable to retrieve your location';
+ }
+ 
+ if(!navigator.geolocation) {
+   status.textContent = 'Geolocation is not supported by your browser';
+ } else {
+   status.textContent = 'Locating…';
+   navigator.geolocation.getCurrentPosition(success, error);
+ }
+ 
+ }
+ 
+ document.querySelector('#find-me').addEventListener('click', geoFindMe);
+ </script>
